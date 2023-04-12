@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zts.marathoner.mapper.JobRelationMapper">
+
+    <resultMap id="Job" type="com.zts.marathoner.entity.Relation" >
+        <result column="job_name" property="jobName" />
+    </resultMap>
+
+</mapper>

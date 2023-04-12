@@ -1,0 +1,22 @@
+server:
+  port: 8765
+spring:
+  security:
+    user:
+      name: user
+      password: 123456
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/edwuser
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+mybatis-plus:
+  # mapper.xml文件扫描
+  mapper-locations: classpath:com/zts/marathoner/mapper/**/*.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  #typeAliasesPackage: com.yibo.essyncclient.*.entity
