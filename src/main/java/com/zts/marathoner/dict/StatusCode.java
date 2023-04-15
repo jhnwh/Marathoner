@@ -5,7 +5,8 @@ public enum StatusCode {
     CHECK_FAILED(1, "检查失败"),
     EXECUTE_FAILED(2, "执行失败"),
 
-    CHECK_NOT_PASSED(11, "检查未通过");
+    CHECK_NOT_PASSED(11, "检查未通过"),
+    ANCESTORS_IS_RUNNING(12, "上游任务正在运行");
 
     private final int code;
     private final String msg;

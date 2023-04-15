@@ -3,62 +3,47 @@ package com.zts.marathoner.submitter;
 import com.zts.marathoner.checker.ProcedureChecker;
 import com.zts.marathoner.dict.JobType;
 import com.zts.marathoner.dict.StatusCode;
-import com.zts.marathoner.executor.ProcedureExecutor;
+import com.zts.marathoner.executor.Dependency;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class ProcedureSubmitter implements Submitter{
 
-    private String jobName;
+    private final ProcedureChecker checker;
+    Dependency dependency;
+    static HashMap<String, List<String>> executeQueue = new HashMap<>();
 
-    private JobType jobType;
-
-    private List<String> param;
-    private ProcedureChecker checker;
-    private ProcedureExecutor executor;
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
-    public JobType getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(JobType jobType) {
-        this.jobType = jobType;
-    }
-
-    public List<String> getParam() {
-        return param;
-    }
-
-    public void setParam(List<String> param) {
-        this.param = param;
-    }
-
-    public ProcedureSubmitter(ProcedureChecker checker, ProcedureExecutor executor){
+    public ProcedureSubmitter(ProcedureChecker checker, Dependency dependency){
         this.checker = checker;
-        this.executor = executor;
+        this.dependency = dependency;
     }
 
-    public StatusCode submit(){
-        int checkResult = this.checker.check(this.jobName, this.jobType, this.param);
-        if (checkResult == 0) {
-            int exec = this.executor.exec(this.jobName, this.jobType, this.param);
-            if (exec == 0) {
-                return StatusCode.SUCCESS;
+    @Override
+    public StatusCode submit(String jobName, List<String> param, boolean isSkipCheck){
+        //检查任务上游任务完整性
+        StatusCode checkResult = StatusCode.SUCCESS;
+        if (!isSkipCheck) {
+            checkResult = this.checker.check(jobName, JobType.PRO, param);
+        }
+        if (checkResult == StatusCode.SUCCESS) {
+            //判断任务上游任务是否正在执行
+            boolean isAncestorsRunning = false;
+            Set<String> ancestors = dependency.getAncestors(jobName);
+            for (String ancestor : ancestors) {
+                isAncestorsRunning = isAncestorsRunning || executeQueue.containsKey(ancestor);
+            }
+            if (isAncestorsRunning) {
+                return StatusCode.ANCESTORS_IS_RUNNING;
             } else {
-                return StatusCode.getObjectByCode(checkResult);
+                executeQueue.put(jobName, param);
+                return StatusCode.SUCCESS;
             }
         } else {
-            return StatusCode.getObjectByCode(checkResult);
+            return checkResult;
         }
     }
 }

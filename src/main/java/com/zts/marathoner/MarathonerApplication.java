@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.zts.**.mapper")
-public class MarathonRunnerApplication {
+public class MarathonerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MarathonRunnerApplication.class, args);
+        SpringApplication.run(MarathonerApplication.class, args);
     }
 
 }

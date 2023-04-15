@@ -1,12 +1,13 @@
 package com.zts.marathoner.executor;
 
 import com.zts.marathoner.dict.JobType;
+import com.zts.marathoner.dict.StatusCode;
 
 import java.util.List;
 
 
-public interface Executor {
+public interface Executor extends Runnable {
 
-    int exec(String jobName, JobType jobType, List<String> param);
+    StatusCode exec(String jobName, JobType jobType, List<String> param);
 
 }

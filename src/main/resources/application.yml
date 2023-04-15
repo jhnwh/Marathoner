@@ -20,3 +20,5 @@ mybatis-plus:
   mapper-locations: classpath:com/zts/marathoner/mapper/**/*.xml
   # 实体扫描，多个package用逗号或者分号分隔
   #typeAliasesPackage: com.yibo.essyncclient.*.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

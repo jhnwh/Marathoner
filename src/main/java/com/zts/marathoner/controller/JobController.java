@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/job")
 public class JobController {
@@ -21,6 +23,7 @@ public class JobController {
     public String submit(@RequestParam(value = "jobName") String jobName,
                          @RequestParam(value = "startDate") String startDate,
                          @RequestParam(value = "endDate") String endDate){
-        return jobService.submit(jobName, startDate, endDate).getMsg();
+        List<String> single = jobService.getSingleWorkDateParam(startDate, endDate);
+        return jobService.submit(jobName, single).getMsg();
     }
 }
