@@ -14,12 +14,16 @@ import java.util.Set;
 public class ProcedureSubmitter implements Submitter{
 
     private final ProcedureChecker checker;
-    Dependency dependency;
+    private final Dependency dependency;
     static HashMap<String, List<String>> executeQueue = new HashMap<>();
 
     public ProcedureSubmitter(ProcedureChecker checker, Dependency dependency){
         this.checker = checker;
         this.dependency = dependency;
+    }
+
+    public Dependency getDependency() {
+        return dependency;
     }
 
     @Override
