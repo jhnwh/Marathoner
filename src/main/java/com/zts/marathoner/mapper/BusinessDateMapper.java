@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 public interface BusinessDateMapper extends BaseMapper<BusinessDate> {
 
-    @Select("SELECT * FROM EDWUSER.T_EDW_T02_BUSINESS_DATE WHERE FIS_TRADE_DAY_FLAG = '10002' AND FDATE BETWEEN #{startDate} AND #{endDate} ORDER BY FDATE")
+    @Select("select * from edwuser.t_edw_t02_business_date where fis_trade_day_flag = '10002' and fdate between #{startDate} and #{endDate} order by fdate")
     List<BusinessDate> queryBusinessDateByStartAndEnd(String startDate, String endDate);
 }

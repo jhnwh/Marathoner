@@ -1,5 +1,6 @@
 package com.zts.marathoner.executor;
 
+import com.zts.marathoner.dict.StatusCode;
 import com.zts.marathoner.entity.JobDefine;
 import com.zts.marathoner.entity.Relation;
 import com.zts.marathoner.mapper.JobDefineMapper;
@@ -16,10 +17,16 @@ public class Dependency {
 
     DirectedAcyclicGraph<String, DefaultEdge> dag;
 
+    JobDefineMapper jobDefineMapper;
+    JobRelationMapper jobRelationMapper;
+
+
 
     Dependency(JobDefineMapper jobDefineMapper, JobRelationMapper jobRelationMapper){
-        List<JobDefine> jobDefines = jobDefineMapper.selectList(null);
-        List<Relation> relations = jobRelationMapper.selectList(null);
+        this.jobDefineMapper = jobDefineMapper;
+        this.jobRelationMapper = jobRelationMapper;
+        List<JobDefine> jobDefines = this.jobDefineMapper.selectList(null);
+        List<Relation> relations = this.jobRelationMapper.selectList(null);
         this.dag = new DirectedAcyclicGraph<>(DefaultEdge.class);
         for (JobDefine jobDefine : jobDefines) {
             this.dag.addVertex(jobDefine.getJobName().trim().toLowerCase());
@@ -28,6 +35,20 @@ public class Dependency {
             this.dag.addEdge(relation.getPetlName().trim().toLowerCase(),
                     relation.getEtlName().trim().toLowerCase());
         }
+    }
+
+    public StatusCode reloadDependency(){
+        List<JobDefine> jobDefines = this.jobDefineMapper.selectList(null);
+        List<Relation> relations = this.jobRelationMapper.selectList(null);
+        this.dag = new DirectedAcyclicGraph<>(DefaultEdge.class);
+        for (JobDefine jobDefine : jobDefines) {
+            this.dag.addVertex(jobDefine.getJobName().trim().toLowerCase());
+        }
+        for (Relation relation : relations) {
+            this.dag.addEdge(relation.getPetlName().trim().toLowerCase(),
+                    relation.getEtlName().trim().toLowerCase());
+        }
+        return StatusCode.SUCCESS;
     }
 
     public DirectedAcyclicGraph<String, DefaultEdge> getDag() {
